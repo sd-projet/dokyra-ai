@@ -1,0 +1,9 @@
+# Démo publique temporaire : expose le frontend via un tunnel Cloudflare gratuit (sans compte ni domaine).
+# Usage : docker compose -f docker-compose.yml -f docker-compose.demo.yml up -d --build
+# L'adresse https://xxxx.trycloudflare.com change à chaque démarrage : voir `docker compose logs tunnel`.
+services:
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate --url http://frontend:80
+    depends_on: [frontend]
+    restart: unless-stopped

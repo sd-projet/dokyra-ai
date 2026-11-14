@@ -1,0 +1,29 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment: { POSTGRES_USER: dokyra, POSTGRES_PASSWORD: dokyra, POSTGRES_DB: dokyra }
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dokyra"]
+      interval: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    env_file: ./backend/.env
+    depends_on: { db: { condition: service_healthy } }
+    # ports: ["8000:8000"]          # API + documentation Swagger : http://localhost:8000/docs
+    # ports: ["127.0.0.1:8080:8000"]    # API + Swagger : http://localhost:8080/docs
+    volumes:
+      - reports:/app/reports
+      - models:/models            # cache Hugging Face : les modèles ne sont téléchargés qu'une fois
+
+  frontend:
+    build: ./frontend
+    depends_on: [backend]
+    ports: ["4200:80"]            # application : http://localhost:4200
+
+volumes:
+  pgdata:
+  reports:
+  models:
