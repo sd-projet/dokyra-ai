@@ -62,3 +62,11 @@ def test_pdf_report_renders_markdown_tables_and_special_chars(tmp_path):
     text = "".join(p.extract_text() for p in PdfReader(str(tmp_path / name)).pages)
     for expected in ["Comparaison télétravail", "Résumé", "gras", "<balise>", "Ancienneté", "12 mois", "point deux", "Page 1"]:
         assert expected in text, expected
+
+
+def test_database_url_is_normalised_for_psycopg():
+    pytest.importorskip("pydantic_settings")
+    from app.infrastructure.config import Settings
+    assert Settings(database_url="postgresql://u:p@h/db").database_url == "postgresql+psycopg://u:p@h/db"
+    assert Settings(database_url="postgres://u:p@h/db").database_url == "postgresql+psycopg://u:p@h/db"
+    assert Settings(database_url="postgresql+psycopg://u:p@h/db").database_url == "postgresql+psycopg://u:p@h/db"

@@ -4,7 +4,10 @@ import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { LoginResponse, UserInfo } from './models';
 
-export const API = '/api';  // proxifié vers le backend (proxy.conf.json en dev, nginx en Docker)
+declare const window: { __API_URL__?: string } | undefined;
+// Par défaut '/api' : proxifié vers le backend (proxy.conf.json en dev, nginx en Docker).
+// En déploiement séparé (Vercel + Render), src/config.js définit l'URL complète du backend.
+export const API = ((typeof window !== 'undefined' && window.__API_URL__) || '/api').replace(/\/+$/, '');
 const TOKEN_KEY = 'dokyra.token';
 const USER_KEY = 'dokyra.user';
 

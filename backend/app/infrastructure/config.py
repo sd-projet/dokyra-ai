@@ -1,3 +1,4 @@
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 _DEFAULT_SECRETS = {"change-me", ""}
@@ -36,6 +37,15 @@ class Settings(BaseSettings):
     cors_origins: str = "http://localhost:4200"
 
     reports_dir: str = "reports"
+
+    @field_validator("database_url")
+    @classmethod
+    def _driver(cls, v: str) -> str:
+        """Render/Heroku fournissent « postgres:// » ou « postgresql:// » : on impose le pilote psycopg (v3)."""
+        for prefix in ("postgres://", "postgresql://"):
+            if v.startswith(prefix):
+                return "postgresql+psycopg://" + v[len(prefix):]
+        return v
 
     @property
     def models(self) -> list[str]:

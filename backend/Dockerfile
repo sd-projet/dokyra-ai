@@ -7,6 +7,8 @@ RUN pip install torch --index-url https://download.pytorch.org/whl/cpu
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 COPY . .
+# Modèles Hugging Face embarqués dans l'image : pas de téléchargement au démarrage (utile sans disque persistant)
+RUN python -m scripts.prefetch_models || echo "préchargement des modèles ignoré (ils seront téléchargés au démarrage)"
 RUN useradd -m app && mkdir -p /app/reports /models && chown -R app /app /models
 USER app
 EXPOSE 8000

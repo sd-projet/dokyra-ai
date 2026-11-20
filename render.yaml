@@ -1,0 +1,41 @@
+# Blueprint Render : base PostgreSQL (pgvector) + API FastAPI en Docker.
+# Render > New > Blueprint > choisir le dépôt GitHub. Les variables « sync: false » sont demandées à la création.
+databases:
+  - name: dokyra-db
+    plan: basic-256mb
+    databaseName: dokyra
+    user: dokyra
+
+services:
+  - type: web
+    name: dokyra-api
+    runtime: docker
+    dockerContext: ./backend
+    dockerfilePath: ./backend/Dockerfile
+    plan: standard            # 2 Go de RAM : nécessaire pour les modèles d'embeddings + reranker
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: "8000"
+      - key: APP_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase: { name: dokyra-db, property: connectionString }
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_USER
+        value: admin
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_BASE_URL
+        value: https://api.groq.com/openai/v1
+      - key: LLM_MODEL
+        value: openai/gpt-oss-20b
+      - key: AVAILABLE_MODELS
+        value: openai/gpt-oss-20b,openai/gpt-oss-120b
+      - key: MODEL_PRICES
+        value: '{"openai/gpt-oss-20b":[0.075,0.30],"openai/gpt-oss-120b":[0.15,0.60]}'
+      - key: CORS_ORIGINS
+        sync: false           # l'adresse Vercel du site, ex. https://dokyra-ai.vercel.app
