@@ -4,10 +4,12 @@ import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { LoginResponse, UserInfo } from './models';
 
-declare const window: { __API_URL__?: string } | undefined;
+declare const window: { __API_URL__?: string; __DEMO__?: boolean } | undefined;
 // Par défaut '/api' : proxifié vers le backend (proxy.conf.json en dev, nginx en Docker).
 // En déploiement séparé (Vercel + Render), src/config.js définit l'URL complète du backend.
 export const API = ((typeof window !== 'undefined' && window.__API_URL__) || '/api').replace(/\/+$/, '');
+/** Mode démo : l'API est simulée dans le navigateur (aucun backend), voir core/demo/. Activé par src/config.js. */
+export const DEMO = typeof window !== 'undefined' && window.__DEMO__ === true;
 const TOKEN_KEY = 'dokyra.token';
 const USER_KEY = 'dokyra.user';
 

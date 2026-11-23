@@ -5,6 +5,16 @@ naturel ; l'IA répond **uniquement** à partir de ces documents, avec les sourc
 sait en plus comparer deux versions d'une politique, faire des calculs et produire un rapport PDF
 (après validation humaine).
 
+## Démo en ligne
+
+**[Ouvrir la démo](https://dokyra-ai.vercel.app/)** — comptes de démonstration affichés sur la page de connexion.
+
+> **Version de démonstration : l'API est simulée dans le navigateur.** Aucun serveur, base de données ni modèle
+> d'IA n'est utilisé. Les réponses sont composées par recherche de mots-clés dans deux documents d'exemple
+> (politiques de télétravail 2023 et 2025), et les données sont réinitialisées à chaque rechargement. Le
+> fonctionnement réel (recherche hybride pgvector, reranking, LLM, agent LangGraph) est celui décrit ci-dessous
+> et s'exécute avec `docker compose up` (voir « Démarrage rapide »).
+
 ## Démarrage rapide (Docker)
 
 ```bash
@@ -132,3 +142,4 @@ suivi des coûts · refus de démarrer en production avec des secrets par défau
 - **Tarifs des modèles indicatifs** (`app/domain/pricing.py`) : ils changent ; surchargez-les via `MODEL_PRICES`.
 - Si vous changez de modèle d'embeddings, ajustez `EMBEDDING_DIM` **et** réimportez les documents (nouvelle base).
 - `pgvector` < 0.8 : la recherche filtrée sur un seul document peut renvoyer moins de passages (un avertissement est journalisé). Le `docker-compose.yml` utilise `pgvector/pgvector:pg16` ; vérifiez la version de pgvector de l'image que vous obtenez.
+- **Démo en ligne simulée** : la version publiée sur Vercel n'appelle pas de backend (réponses par mots-clés, données en mémoire, PDF/DOCX importés non lus). Voir `DEPLOIEMENT.md`.

@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../core/auth.service';
+import { AuthService, DEMO } from '../core/auth.service';
 import { DEMO_ACCOUNTS, DemoAccount } from '../core/demo-accounts';
 import { errorMessage } from '../core/errors';
 import { SiteHeaderComponent } from './site-header.component';
@@ -25,6 +25,7 @@ import { SiteHeaderComponent } from './site-header.component';
           <label class="field">Mot de passe
             <input name="p" type="password" [(ngModel)]="password" autocomplete="current-password" required>
           </label>
+          @if (demo) { <p class="muted small">Version de démonstration : aucun serveur, aucune donnée envoyée. Utilisez un compte de droite.</p> }
           @if (error()) { <div class="alert error">{{ error() }}</div> }
           <button class="primary" type="submit" [disabled]="busy()">
             @if (busy()) { <span class="spinner"></span> } Se connecter
@@ -71,6 +72,7 @@ export class LoginComponent {
   private auth = inject(AuthService);
   private router = inject(Router);
   demoAccounts = DEMO_ACCOUNTS;
+  demo = DEMO;
   username = ''; password = '';
   busy = signal(false); error = signal('');
 

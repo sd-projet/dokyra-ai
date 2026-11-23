@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { AuthService } from '../core/auth.service';
+import { AuthService, DEMO } from '../core/auth.service';
 
 @Component({
   selector: 'app-shell',
@@ -17,6 +17,7 @@ import { AuthService } from '../core/auth.service';
         <a routerLink="/usage" routerLinkActive="active">📊 Usage & coûts</a>
         @if (auth.isAdmin()) { <a routerLink="/users" routerLinkActive="active">👥 Utilisateurs</a> }
         <div class="grow"></div>
+        @if (demo) { <div class="demo small" role="note"><strong>Mode démo</strong><br>Réponses et données simulées, sans serveur ni IA. Les modifications disparaissent au rechargement.</div> }
         <div class="me small">
           <div>{{ auth.user()?.username }} <span class="tag">{{ auth.user()?.role }}</span></div>
           <button class="small" (click)="auth.logout()">Déconnexion</button>
@@ -32,6 +33,7 @@ import { AuthService } from '../core/auth.service';
     .side a { padding: .5rem .6rem; border-radius: 8px; text-decoration: none; color: var(--text); }
     .side a:hover { background: var(--surface-2); }
     .side a.active { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+    .demo { margin: 0 .25rem .5rem; padding: .5rem .6rem; border: 1px dashed var(--border); border-radius: 8px; background: var(--surface-2); color: var(--muted); }
     .me { padding: .5rem; display: flex; flex-direction: column; gap: .4rem; }
     .content { overflow: auto; min-width: 0; }
     @media (max-width: 800px) {
@@ -41,4 +43,4 @@ import { AuthService } from '../core/auth.service';
     }
   `],
 })
-export class ShellComponent { auth = inject(AuthService); }
+export class ShellComponent { auth = inject(AuthService); demo = DEMO; }

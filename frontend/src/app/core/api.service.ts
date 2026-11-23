@@ -1,7 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { API, AuthService } from './auth.service';
+import { API, AuthService, DEMO } from './auth.service';
+import { demoStream } from './demo/demo.interceptor';
 import { errorMessage } from './errors';
 import {
   AgentResponse, AskRequest, AskResponse, CompareRequest, CompareResult, ConversationDetail,
@@ -34,6 +35,7 @@ export class ApiService {
 
   /** Streaming SSE via fetch (EventSource ne gère ni POST ni l'en-tête Authorization). */
   async streamChat(body: AskRequest, h: StreamHandlers): Promise<void> {
+    if (DEMO) return demoStream(this.auth.token, body, h);
     const res = await fetch(`${API}/chat/stream`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${this.auth.token}` },
