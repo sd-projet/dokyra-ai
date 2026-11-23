@@ -42,8 +42,6 @@ Seul le frontend est publié. Les appels à l'API sont interceptés et traités 
 - Seuls les fichiers `.txt` et `.md` importés sont interrogeables ; les PDF et DOCX sont listés mais leur contenu n'est pas lu.
 - Un encadré « Mode démo » est affiché dans l'application pour le signaler aux visiteurs.
 
-Il est recommandé de préciser sur le CV qu'il s'agit d'une version de démonstration et d'indiquer le lien du dépôt GitHub.
-
 ---
 
 ## B. Déploiement complet (Vercel + Render)
